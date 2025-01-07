@@ -22,6 +22,10 @@ const Input = () => {
   const { data } = useContext(ChatContext);
 
   const handleSend = async () => {
+
+    if (!text.trim()) {
+      return;
+    }
     if (img) {
       const storageRef = ref(storage, uuid());
 
@@ -73,13 +77,28 @@ const Input = () => {
     setText("");
     setImg(null);
   };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSend();
+    }
+  };
+
+  // const handleFocus = (event) => {
+  //   // event.preventDefault(); 
+  //   event.target.blur(); 
+  // };
+
   return (
-    <div className="input">
+    <div className="inputMain">
       <input
+      className="inputMain2"
         type="text"
-        placeholder="Type something..."
+        placeholder=""
         onChange={(e) => setText(e.target.value)}
         value={text}
+        onKeyDown={handleKeyDown}
+        // onFocus={handleFocus} 
       />
       <div className="send">
         {/* <img src={Attach} alt="" /> */}
@@ -89,10 +108,18 @@ const Input = () => {
           id="file"
           onChange={(e) => setImg(e.target.files[0])}
         />
-        <label htmlFor="file">
-          {/* <img src={Img} alt="" /> */}
-        </label>
-        <button onClick={handleSend}>Send</button>
+        <label htmlFor="file">{/* <img src={Img} alt="" /> */}</label>
+        <button onClick={handleSend} className="sendButton">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            width="20px"
+            height="20px"
+          >
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+          </svg>
+        </button>
       </div>
     </div>
   );

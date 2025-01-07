@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { ChatContext } from "../context/ChatContext";
 import { db } from "../firebase";
+import UserAvatar from "./UserAvatar";
 
 const Chats = () => {
   const [chats, setChats] = useState([]);
@@ -36,7 +37,8 @@ const Chats = () => {
           key={chat[0]}
           onClick={() => handleSelect(chat[1].userInfo)}
         >
-          <img src={chat[1].userInfo.photoURL} alt="" />
+          {/* <img src={chat[1].userInfo.photoURL} alt="" /> */}
+          <UserAvatar name={chat[1].userInfo.displayName} isOnline={true}/>
           <div className="userChatInfo">
             <span>{chat[1].userInfo.displayName}</span>
             <p>{chat[1].lastMessage?.text}</p>

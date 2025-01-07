@@ -12,6 +12,8 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
+import UserAvatar from "./UserAvatar";
+
 const Search = () => {
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
@@ -40,7 +42,6 @@ const Search = () => {
   };
 
   const handleSelect = async () => {
-    //check whether the group(chats in firestore) exists, if not create
     const combinedId =
       currentUser.uid > user.uid
         ? currentUser.uid + user.uid
@@ -51,7 +52,6 @@ const Search = () => {
       console.log("Combined ID: ", combinedId);
       console.log("Chat exists: ", res.exists());
 
-
       if (!res.exists()) {
         //create a chat in chats collection
         console.log("Creating chat in chats collection");
@@ -61,7 +61,7 @@ const Search = () => {
         await updateDoc(doc(db, "userChats", currentUser.uid), {
           [combinedId + ".userInfo"]: {
             uid: user.uid,
-            displayName: user.displayName
+            displayName: user.displayName,
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
@@ -69,22 +69,29 @@ const Search = () => {
         await updateDoc(doc(db, "userChats", user.uid), {
           [combinedId + ".userInfo"]: {
             uid: currentUser.uid,
-            displayName: currentUser.displayName
+            displayName: currentUser.displayName,
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
       }
     } catch (err) {}
-console.log("erroe aahe")
+    console.log("erroe aahe");
     setUser(null);
-    setUsername("")
+    setUsername("");
   };
   return (
     <div className="search">
       <div className="searchForm">
+        <i
+          className="fas fa-search"
+          style={{
+            color: "lightgray",
+            fontSize: "13px"
+          }}
+        ></i>
         <input
           type="text"
-          placeholder="Find a user"
+          placeholder="Search"
           onKeyDown={handleKey}
           onChange={(e) => setUsername(e.target.value)}
           value={username}
@@ -93,7 +100,7 @@ console.log("erroe aahe")
       {err && <span>User not found!</span>}
       {user && (
         <div className="userChat" onClick={handleSelect}>
-          <img src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg" alt="" />
+        <UserAvatar name={user.displayName} isOnline={true}/>
           <div className="userChatInfo">
             <span>{user.displayName}</span>
           </div>

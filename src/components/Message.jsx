@@ -12,28 +12,24 @@ const Message = ({ message }) => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   }, [message]);
 
+  const formatTime = (timestamp) => {
+  if (!timestamp) return "";
+  const date = timestamp.toDate();
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+};
+
   return (
     <div
       ref={ref}
-      className={`message ${message.senderId === currentUser.uid && "owner"}`}
+      className={`message ${message.senderId === currentUser.uid ? "owner" : ""}`}
     >
-      <div className="messageInfo">
-        <img
-          // src={
-          //   message.senderId === currentUser.uid
-          //     ? currentUser.photoURL
-          //     : data.user.photoURL
-          // }
-          src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg"
-          alt=""
-        />
-        <span>just abbhi</span>
-      </div>
       <div className="messageContent">
         <p>{message.text}</p>
-        {message.img && <img src="https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg" alt="" />}
       </div>
-    </div>
+      <div className="messageInfo">
+        <span style={{fontSize:"12px", fontWeight:"500"}}>{formatTime(message.date)}</span>
+      </div>
+      </div>
   );
 };
 
