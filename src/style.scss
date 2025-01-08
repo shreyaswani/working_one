@@ -276,6 +276,22 @@
           }
         }
       }
+      
+      .emoji-icon {
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+        filter: invert(0.7);
+        position: absolute;
+        right: 70px;
+      }
+      
+      .emoji-picker {
+        position: absolute;
+        bottom: 60px; 
+        right: 20px; 
+        z-index: 1000; 
+      }
     }
   }
 }
