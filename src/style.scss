@@ -132,6 +132,7 @@
     }
     .chat {
       flex: 2;
+      overflow: hidden;
 
       .chatInfo {
         height: 50px;
@@ -159,15 +160,20 @@
       }
 
       .messages {
-        background-color: rgb(39, 40, 40); /* Fallback color */
+        background-color: rgb(39, 40, 40); 
         background-image: 
-          linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)), /* Color overlay */
-          url("./img/default_wall.png"); /* Background image */
+          linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)),
+          url("./img/default_wall.png"); 
         background-size: contain; 
         object-fit: contain;
         padding: 15px 15px 0;
         height: calc(100% - 135px);
         overflow: scroll;
+        -ms-overflow-style: none; 
+        scrollbar-width: none;
+        .messages::-webkit-scrollbar { 
+          display: none; 
+      }
 
 
         .message {

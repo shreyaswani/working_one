@@ -21,7 +21,6 @@ const Message = ({ message, previousMessage }) => {
     });
   };
 
-
   return (
     <div
       ref={ref}

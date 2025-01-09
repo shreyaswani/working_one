@@ -83,6 +83,7 @@ const Input = () => {
           text,
           senderId: currentUser.uid,
           date: Timestamp.now(),
+          status: "delivered", 
         }),
       });
     }
@@ -102,7 +103,6 @@ const Input = () => {
     });
 
     setText("");
-    setImg(null);
   };
 
   const handleKeyDown = (e) => {
