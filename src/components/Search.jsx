@@ -102,7 +102,7 @@ const Search = () => {
         <div className="userChat" onClick={handleSelect}>
         <UserAvatar name={user.displayName} isOnline={true}/>
           <div className="userChatInfo">
-            <span>{user.Name}</span>
+            <span>{user.displayName}</span>
           </div>
         </div>
       )}
