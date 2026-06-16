@@ -24,7 +24,7 @@ const Search = () => {
   const handleSearch = async () => {
     const q = query(
       collection(db, "users"),
-      where("username", "==", username)
+      where("displayName", "==", username)
     );
 
     try {
@@ -100,7 +100,7 @@ const Search = () => {
       {err && <span>User not found!</span>}
       {user && (
         <div className="userChat" onClick={handleSelect}>
-        <UserAvatar name={user.username} isOnline={true}/>
+        <UserAvatar name={user.displayName} isOnline={true}/>
           <div className="userChatInfo">
             <span>{user.Name}</span>
           </div>
