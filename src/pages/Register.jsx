@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import './newloginstyle.css';
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 
@@ -27,17 +26,28 @@ function Register({toggleForm}) {
     }
     
     try {
-    const res = await createUserWithEmailAndPassword(auth, email, password);
-      toast.success(`${username},Registered Successfully!!`, {
+      // 1. Create the user
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // 2. IMPORTANT: Update the Firebase Auth Profile with the display name
+      await updateProfile(res.user, {
+        displayName: username,
+      });
+
+      toast.success(`${username}, Registered Successfully!!`, {
         position: "top-center",
       });
-            await setDoc(doc(db, "users", res.user.uid), {
-              uid: res.user.uid,
-              username,
-              email
-            });
-            await setDoc(doc(db, "userChats", res.user.uid), {});
-            navigate("/");
+      
+      // 3. Save to Firestore using "displayName" instead of "username"
+      await setDoc(doc(db, "users", res.user.uid), {
+        uid: res.user.uid,
+        displayName: username, // We map your 'username' state to the 'displayName' field
+        email
+      });
+      
+      await setDoc(doc(db, "userChats", res.user.uid), {});
+      navigate("/");
+      
     } catch (error) {
       let errorMessage = "Something went wrong. Please try again.";
       if (error.code === "auth/email-already-in-use") {
@@ -50,6 +60,7 @@ function Register({toggleForm}) {
       });
     }
   };
+
 
     function googleLogin() {
       const provider = new GoogleAuthProvider();
