@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
+import { ChatContext } from "../context/ChatContext";
 import UserAvatar from "./UserAvatar";
 
 const Search = () => {
@@ -20,6 +21,7 @@ const Search = () => {
   const [err, setErr] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
+  const {dispatch} = useContext(ChatContext);
 
   const handleSearch = async () => {
     const q = query(
@@ -74,8 +76,10 @@ const Search = () => {
           [combinedId + ".date"]: serverTimestamp(),
         });
       }
-    } catch (err) {}
-    console.log("erroe aahe");
+    } catch (err) {
+      console.log("error aahe: ", err);
+    }
+    dispatch({type: "CHANGE_USER", payload: user});
     setUser(null);
     setUsername("");
   };
