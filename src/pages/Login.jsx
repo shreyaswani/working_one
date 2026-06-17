@@ -30,13 +30,16 @@ const Login = ({toggleForm}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const loggedInUser = userCredential.user; 
+      console.log(loggedInUser)
       const greeting = getGreeting();
-      toast.success(`Hey ${currentUser.displayName}, ${greeting}`, {
+      toast.success(`Hey ${loggedInUser.displayName}, ${greeting}`, {
         position: "top-center",
       });
       navigate("/");
-    } catch (error) {
+    } 
+    catch (error) {
       let errorMessage = "An unexpected error occurred. Please try again.";
 
       switch (error.code) {
