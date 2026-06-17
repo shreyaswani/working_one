@@ -8,52 +8,57 @@ import { AuthContext } from "./context/AuthContext";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+const ProtectedRoute = ({ children, currentUser }) => {
+  if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
+  return children;
+};
+
+const ToggleForm = () => {
+  const navigate = useNavigate();
+  const [isRegisterForm, setIsRegisterForm] = useState(false);
+
+  const toggleForm = () => {
+    setIsRegisterForm((prev) => {
+      const newFormState = !prev;
+      navigate(newFormState ? "/register" : "/login"); 
+      return newFormState;
+    });
+  };
+  return isRegisterForm ? (
+    <Register toggleForm={toggleForm} />
+  ) : (
+    <Login toggleForm={toggleForm} />
+  );
+};
+
 function App() {
   const { currentUser } = useContext(AuthContext);
-  const ProtectedRoute = ({ children }) => {
-    if (!currentUser) {
-      return <Navigate to="/login" />;
-    }
-    return children
-  };
-
-  const ToggleForm = () => {
-    const navigate = useNavigate();
-    const [isRegisterForm, setIsRegisterForm] = useState(false);
-  
-    const toggleForm = () => {
-      setIsRegisterForm((prev) => {
-        const newFormState = !prev;
-        navigate(newFormState ? "/register" : "/login"); 
-        return newFormState;
-      });
-    };
-    return isRegisterForm ? (
-      <Register toggleForm={toggleForm} />
-    ) : (
-      <Login toggleForm={toggleForm} />
-    );
-  };
-
-  
 
   return (
     <>
-    <ToastContainer autoClose={2000} hideProgressBar={true} />
-    <BrowserRouter>
-      <Routes>
-      <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
-          <Route path="/login" element={<ToggleForm />} />
-          <Route path="/register" element={<ToggleForm />} />
-      </Routes>
-    </BrowserRouter>
+      <ToastContainer autoClose={2000} hideProgressBar={true} />
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute currentUser={currentUser}>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route 
+            path="/login" 
+            element={currentUser ? <Navigate to="/" /> : <ToggleForm />} 
+          />
+          <Route 
+            path="/register" 
+            element={currentUser ? <Navigate to="/" /> : <ToggleForm />} 
+          />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
