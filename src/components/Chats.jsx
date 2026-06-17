@@ -12,18 +12,22 @@ const Chats = () => {
   const { dispatch } = useContext(ChatContext);
 
   useEffect(() => {
+    let unsub;
     const getChats = () => {
-      const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
-        setChats(doc.data());
+      unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
+        setChats(doc.data() || {});
       });
-
-      return () => {
-        unsub();
-      };
     };
+    if (currentUser?.uid) {
+      getChats();
+    }
+    return () => {
+      if (unsub) {
+        unsub(); 
+      }
+    };
+  }, [currentUser?.uid]);
 
-    currentUser.uid && getChats();
-  }, [currentUser.uid]);
 
   const handleSelect = (u) => {
     dispatch({ type: "CHANGE_USER", payload: u });
@@ -46,7 +50,12 @@ const Chats = () => {
               />
               <div className="userChatInfo">
                 <span>{chat[1].userInfo?.displayName}</span> 
-                <p>{chat[1].lastMessage?.text}</p>
+                <p>
+                  {/* Check if text exists and is longer than 20 chars */}
+                  {chat[1].lastMessage?.text?.length > 20 
+                    ? chat[1].lastMessage.text.substring(0, 60) + "..." 
+                    : chat[1].lastMessage?.text}
+                </p>
               </div>
             </div>
           )
